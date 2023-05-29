@@ -1,0 +1,5 @@
+path_web_driver=
+path_screenshot_photo=
+sender_email=
+sender_password=
+recipient_email=

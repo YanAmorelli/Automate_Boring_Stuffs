@@ -21,7 +21,7 @@ path_web_driver=variables[0]
 path_screenshot_photo=variables[1]
 sender_email=variables[2]
 sender_password=variables[3]
-recipient_email=variables[4]
+recipient_email=variables[4].split(",")
 
 # Set the path to your Chrome driver executable
 chrome_driver_path = path_web_driver
@@ -40,19 +40,22 @@ driver.save_screenshot(screenshot_path)
 driver.quit()
 
 # Create an EmailMessage object
-email_message = EmailMessage()
-email_message["Subject"] = "Sales report dashboard"
-email_message["From"] = sender_email
-email_message["To"] = recipient_email
+for recipient in recipient_email:
+    email_message = EmailMessage()
+    email_message["Subject"] = "Sales report dashboard"
+    email_message["From"] = sender_email
+    email_message["To"] = recipient
 
-# Attach the screenshot to the email
-with open(screenshot_path, "rb") as screenshot_file:
-    screenshot_data = screenshot_file.read()
-    email_message.add_attachment(screenshot_data, maintype="image", subtype="png", filename="screenshot.png")
+    # Attach the screenshot to the email
+    with open(screenshot_path, "rb") as screenshot_file:
+        screenshot_data = screenshot_file.read()
+        email_message.add_attachment(screenshot_data, maintype="image", subtype="png", filename="screenshot.png")
 
-# Send the email
-with SMTP_SSL("smtp.gmail.com") as smtp:
-    smtp.login(sender_email, sender_password)
-    smtp.send_message(email_message)
+    # Send the email
+    with SMTP_SSL("smtp.gmail.com") as smtp:
+        smtp.login(sender_email, sender_password)
+        smtp.send_message(email_message)
+
+    print(f"Screenshot sent to {recipient}")
 
 print("Screenshot captured and email sent successfully.")
