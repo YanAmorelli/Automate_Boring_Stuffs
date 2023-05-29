@@ -1,16 +1,12 @@
 import time
-import os
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from smtplib import SMTP_SSL
-from email.message import EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import base64
 
 # Get variables saved in a txt file
-file = open("variables.txt", "r")
+file = open("variables_real.txt", "r")
 variables = file.readlines()
 file.close()
 
@@ -41,7 +37,7 @@ driver.quit()
 
 # Create an EmailMessage object
 for recipient in recipient_email:
-    email_message = EmailMessage()
+    email_message = MIMEMultipart()
     email_message["Subject"] = "Sales report dashboard"
     email_message["From"] = sender_email
     email_message["To"] = recipient
@@ -49,7 +45,22 @@ for recipient in recipient_email:
     # Attach the screenshot to the email
     with open(screenshot_path, "rb") as screenshot_file:
         screenshot_data = screenshot_file.read()
-        email_message.add_attachment(screenshot_data, maintype="image", subtype="png", filename="screenshot.png")
+
+    # Encode the screenshot data using Base64
+    screenshot_data_encoded = base64.b64encode(screenshot_data).decode("ascii")
+
+
+    html_message = f"""
+    <html>
+        <body>
+            <h1>Sales Report Dashboard</h1>
+            <p>Here is the sales report dashboard:</p>
+            <img src="data:image/png;base64,{screenshot_data_encoded}" alt="Dashboard Screenshot">
+        </body>
+    </html>
+    """
+    # Attach the HTML message to the email
+    email_message.attach(MIMEText(html_message, "html"))
 
     # Send the email
     with SMTP_SSL("smtp.gmail.com") as smtp:
