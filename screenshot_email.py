@@ -1,4 +1,5 @@
 import time
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -8,12 +9,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 from smtplib import SMTP_SSL
 from email.message import EmailMessage
 
-# Set up the Chrome driver options
-#chrome_options = Options()
-#chrome_options.add_argument("--headless=new")  # Run Chrome in headless mode (no GUI)
+# Get variables saved in a txt file
+file = open("variables.txt", "r")
+variables = file.readlines()
+file.close()
+
+for index, item in enumerate(variables):
+    variables[index] = item.split("=")[1].replace("\n", "").rstrip()
+
+path_web_driver=variables[0]
+path_screenshot_photo=variables[1]
+sender_email=variables[2]
+sender_password=variables[3]
+recipient_email=variables[4]
 
 # Set the path to your Chrome driver executable
-chrome_driver_path = "file name with absolute path of chrome driver"
+chrome_driver_path = path_web_driver
 
 # Create a new Chrome driver instance
 driver = webdriver.Chrome(executable_path=chrome_driver_path)
@@ -23,15 +34,10 @@ url = "https://www.inetsoft.com/evaluate/bi_visualization_gallery/dashboard.jsp?
 
 # Load the webpage
 driver.get(url)
-time.sleep(5)
-screenshot_path = "Path_to_save_photo/screenshot.png"
+time.sleep(10)
+screenshot_path = path_screenshot_photo + "screenshot.png"
 driver.save_screenshot(screenshot_path)
 driver.quit()
-
-# Email configuration
-sender_email = "sender_email@gmail.com"
-sender_password = "gmail_auth_code"
-recipient_email = "recipient_email@gmail.com"
 
 # Create an EmailMessage object
 email_message = EmailMessage()
