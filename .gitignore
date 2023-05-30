@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 chromedriver.exe
-variables_real.txt
+variables_real.json
 screenshot.png

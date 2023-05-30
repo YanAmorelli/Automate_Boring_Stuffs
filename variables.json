@@ -1,0 +1,7 @@
+{
+    "path_web_driver":"path/subpath/chromewebdriver.exe",
+    "path_screenshot_photo":"path/subpath/",
+    "sender_email":"my_email@email.com",
+    "sender_password":"token",
+    "recipient_email":"example@gmail.com,powef36165@onlcool.com"
+}
