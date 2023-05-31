@@ -19,7 +19,9 @@ recipient_email=variables["recipient_email"].split(",")
 chrome_driver_path = variables["path_web_driver"]
 
 # Create a new Chrome driver instance
-driver = webdriver.Chrome(executable_path=chrome_driver_path)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless=new")  
+driver = webdriver.Chrome(executable_path=chrome_driver_path, options=chrome_options)
 
 # Website URL to capture
 url = "https://www.inetsoft.com/evaluate/bi_visualization_gallery/dashboard.jsp?dbIdx=8"
